@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>おみくじ</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      background: linear-gradient(160deg, #fdf6e3, #f4e1c1);
+      color: #3b2a1a;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 360px;
+      padding: 32px 24px;
+      text-align: center;
+      background: #fffdf8;
+      border: 3px solid #b5302a;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      margin: 0 0 24px;
+      font-size: 1.8rem;
+      letter-spacing: 0.2em;
+    }
+
+    .result {
+      min-height: 5rem;
+      margin-bottom: 8px;
+      font-size: 3.5rem;
+      font-weight: bold;
+      line-height: 5rem;
+    }
+
+    .message {
+      min-height: 1.5em;
+      margin: 0 0 24px;
+    }
+
+    .result.shake {
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: rotate(0); }
+      25% { transform: rotate(-8deg); }
+      75% { transform: rotate(8deg); }
+    }
+
+    button {
+      padding: 12px 32px;
+      font-size: 1.1rem;
+      font-family: inherit;
+      color: #fff;
+      background: #b5302a;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #962620;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>おみくじ</h1>
+    <div class="result" id="result">？</div>
+    <p class="message" id="message">ボタンを押して運勢を占おう</p>
+    <button id="draw">おみくじを引く</button>
+  </main>
+
+  <script>
+    const fortunes = [
+      { name: "大吉", color: "#d4351c", message: "最高の一日になりそう！" },
+      { name: "中吉", color: "#e0662f", message: "良いことが起こる予感。" },
+      { name: "小吉", color: "#c98a1b", message: "ささやかな幸せが見つかるかも。" },
+      { name: "吉", color: "#5a8f29", message: "穏やかで良い日です。" },
+      { name: "末吉", color: "#3d7ea6", message: "後からじわじわ運が向いてきます。" },
+      { name: "凶", color: "#6b5b95", message: "慎重に行動すれば大丈夫。" },
+      { name: "大凶", color: "#444444", message: "今日は無理せずゆっくり休もう。" }
+    ];
+
+    const resultEl = document.getElementById("result");
+    const messageEl = document.getElementById("message");
+    const button = document.getElementById("draw");
+
+    button.addEventListener("click", () => {
+      button.disabled = true;
+      resultEl.classList.remove("shake");
+      // アニメーションを再生し直すために再描画させる
+      void resultEl.offsetWidth;
+      resultEl.classList.add("shake");
+      resultEl.textContent = "…";
+      resultEl.style.color = "";
+      messageEl.textContent = "";
+
+      setTimeout(() => {
+        const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+        resultEl.textContent = fortune.name;
+        resultEl.style.color = fortune.color;
+        messageEl.textContent = fortune.message;
+        button.textContent = "もう一度引く";
+        button.disabled = false;
+      }, 500);
+    });
+  </script>
+</body>
+</html>
